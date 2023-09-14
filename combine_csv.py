@@ -10,9 +10,13 @@ def combine_csv():
         if filename.split('.')[-1] == 'csv':
             df = pd.read_csv(filename, index_col='time')
             #print(df)
-            print(df.info(verbose=True))
+            # print(df.info(verbose=True))
             dfs.append(df)
     
-    return pd.concat(dfs)
+    combined = pd.concat(dfs)
+    combined.sort_index(inplace=True)
+    return combined.dropna(subset=['subreddit', 'title', 'score', 'num_comments'])
 
-# print(combine_csv())
+df = combine_csv()
+df.to_csv('submissions.csv')
+print(df)
